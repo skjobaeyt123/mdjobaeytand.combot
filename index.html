@@ -1,4 +1,4 @@
-<!DOCTYPE html>  <html lang="en">  
+
 <head>  
   <meta charset="UTF-8" />  
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
@@ -351,37 +351,4 @@ window.onload = () => {
   const tgUser = Telegram.WebApp.initDataUnsafe.user;
   if (tgUser) {
     const username = tgUser.username || ("user" + tgUser.id);
-    const userKey = "adsUser_" + username;
-    const saved = localStorage.getItem(userKey);
-    let userData = saved ? JSON.parse(saved) : {
-      coins: 0,
-      completed: 0,
-      completedEarn: 0,
-      username,
-      myCode: "REF" + Math.floor(Math.random() * 100000),
-      referrals: [],
-      withdrawn: false,
-      referredBy: localStorage.getItem("pendingReferral") || null
-    };
-    localStorage.setItem(userKey, JSON.stringify(userData));
-    localStorage.setItem("activeUser", username);
-    document.getElementById("welcomeScreen").classList.add("hidden");
-    document.getElementById("home").classList.remove("hidden");
-    document.getElementById("navBar").classList.remove("hidden");
-    document.getElementById("userDisplay").innerText = username;
-    document.getElementById("profileUsername").innerText = username;
-    document.getElementById("balance").innerText = userData.coins;
-    document.getElementById("balanceWithdraw").innerText = userData.coins;
-    document.getElementById("balanceProfile").innerText = userData.coins;
-    document.getElementById("completed").innerText = userData.completed;
-    document.getElementById("completedEarn").innerText = userData.completedEarn || 0;
-    document.getElementById("todayEarning").innerText = (userData.coins * 0.01).toFixed(2);
-    document.getElementById("lifetimeEarning").innerText = (userData.coins * 0.01).toFixed(2);
-    document.getElementById("myRefCode").value = userData.myCode;
-    document.getElementById("refLink").value = "https://skjonaeyt-ads-and-incam-many-bot.vercel.app?ref=" + userData.myCode;
-  }
-};
-</script>
-
-</body>  
-</html>
+    const userKey = "adsUser_
