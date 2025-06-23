@@ -10,116 +10,148 @@
     .container { padding: 20px; }
     .card { background: #fff; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .btn { padding: 10px 15px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; border-top: 1px solid #ccc; padding: 10px 0; }
+    nav button { background: none; border: none; font-size: 14px; color: #1a237e; cursor: pointer; }
     .hidden { display: none; }
-    input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #ccc; }
-    a { color: #1a73e8; text-decoration: none; font-weight: bold; }
-    .avatar { width: 80px; border-radius: 50%; margin-bottom: 10px; }
+    input, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #ccc; }
+    a { display: block; color: #1a73e8; text-decoration: none; margin: 5px 0; font-weight: bold; }
   </style>
 </head>
 <body>
-
-<header>AdBikash</header>
-
-<div class="container" id="welcomeScreen">
-  <div class="card" style="text-align:center;">
-    <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" alt="Welcome" class="avatar" />
-    <h2>🎉 স্বাগতম AdBikash প্ল্যাটফর্মে!</h2>
-    <p>অ্যাড দেখে ইনকাম করুন, রেফার করে আরও আয় করুন!</p>
-    <p>⚠️ শুধুমাত্র VPN চালু করে 🇺🇸 🇬🇧 🇨🇦 🇩🇪 🇦🇺 কান্ট্রি দিয়ে প্রবেশ করুন।</p>
-    <a href="https://t.me/ADANDINCAMMANYOfficialgroup" target="_blank">📢 চ্যানেল</a> |
-    <a href="https://t.me/ADANDINCAMMANYOfficialgroup" target="_blank">👥 গ্রুপ</a><br><br>
-
-    <button class="btn" onclick="handleStart()">▶️ START</button>
-    <button id="sessionClearBtn" class="btn hidden" onclick="clearSession()">🧹 সেশন ক্লিয়ার</button>
+  <header>AdBikash</header>
+  <div class="container" id="welcomeScreen">
+    <div class="card" style="text-align: center;">
+      <img src="welcome.jpg" alt="Welcome" style="width: 200px; border-radius: 10px; margin-bottom: 15px;" />
+      <h2>🎉 স্বাগতম AdBikash প্ল্যাটফর্মে!</h2>
+      <p>এখানে অ্যাড দেখে ইনকাম করুন, বন্ধুদের রেফার করুন, আর বট দিয়ে উইথড্র নিন!</p>
+      <p>⚠️ কাজ করতে হলে VPN চালু করুন। 🇺🇸 🇬🇧 🇨🇦 🇩🇪 🇦🇺 ছাড়া অন্য দেশ প্রবেশ করতে পারবে না।</p>
+      <a href="https://t.me/ADANDINCAMMANYOfficialgroup" target="_blank">📢 চ্যানেল</a>
+      <a href="https://t.me/ADANDINCAMMANYOfficialgroup" target="_blank">👥 গ্রুপ</a>
+      <button class="btn" onclick="goToLogin()">▶️ START</button>
+      <button id="sessionClearBtn" class="btn" onclick="clearSession()" style="display: none;">🧹 সেশন ক্লিয়ার</button>
+    </div>
   </div>
-</div>
 
-<div class="container hidden" id="loginScreen">
-  <div class="card">
-    <h3>আপনার ইউজারনেম দিন</h3>
-    <input type="text" id="usernameInput" placeholder="যেমনঃ user123" />
-    <button class="btn" onclick="startApp()">চালিয়ে যান</button>
+  <div class="container hidden" id="login">
+    <div class="card">
+      <h3>আপনার ইউজারনেম দিন</h3>
+      <input type="text" id="usernameInput" placeholder="যেমনঃ user123" />
+      <button class="btn" onclick="startApp()">চালিয়ে যান</button>
+    </div>
   </div>
-</div>
 
+  <div class="container hidden" id="home">
+    <div class="card">
+      <h3 id="userDisplay">Username</h3>
+      <p><strong>ব্যালেন্স:</strong> <span id="balance">0</span> কয়েন</p>
+    </div>
+    <div class="card">
+      <h4>আজকের কাজ</h4>
+      <p>মোট কাজ: ∞<br> শেষ হয়েছে: <span id="completed">0</span><br> বাকি: ∞</p>
+    </div>
+    <div class="card">
+      <h4>আজকের আয়</h4>
+      <p>আজকের আয়: BDT <span id="todayEarning">0.00</span><br> মোট আয়: BDT <span id="lifetimeEarning">0.00</span></p>
+    </div>
+  </div><div class="container hidden" id="earn">
+    <div class="card">
+      <h4>আজকের টাস্ক</h4>
+      <p>মোট: ∞ | শেষ: <span id="completedEarn">0</span> | বাকি: ∞</p>
+      <button class="btn" id="adBtn" onclick="showAd()">🎬 কাজ শুরু করুন</button>
+      <div id="cooldownMessage" class="hidden">
+        <p>১ ঘণ্টার জন্য কাজ বন্ধ আছে। অনুগ্রহ করে পরে চেষ্টা করুন।</p>
+      </div>
+      <div id="adContainer" style="margin-top:15px;"></div>
+    </div>
+    <div class="card">
+      <h4>রেফার কোড দিন (ঐচ্ছিক):</h4>
+      <input type="text" id="refInput" placeholder="রেফার কোড লিখুন" />
+    </div>
+  </div>
+
+  <div class="container hidden" id="withdraw">
+    <div class="card">
+      <h4>উপলব্ধ ব্যালেন্স: <span id="balanceWithdraw">0</span> কয়েন</h4>
+      <h4>উইথড্র রিকোয়েস্ট করুন</h4>
+      <select id="method">
+        <option value="">মেথড সিলেক্ট করুন</option>
+        <option value="recharge">মোবাইল রিচার্জ (৫০০০ কয়েন)</option>
+        <option value="bkash">bKash/Nagad (১০০০০ কয়েন)</option>
+      </select>
+      <input type="number" id="amount" placeholder="টাকার পরিমাণ লিখুন" />
+      <input type="text" id="wallet" placeholder="বিকাশ/নগদ নাম্বার" />
+      <button class="btn" onclick="submitWithdraw()">উইথড্র দিন</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="profile">
+    <div class="card">
+      <h3>প্রোফাইল</h3>
+      <p>ইউজারনেম: <span id="profileUsername"></span></p>
+      <p>ব্যালেন্স: <span id="balanceProfile">0</span> কয়েন</p>
+      <p>আপনার রেফার কোড:</p>
+      <input type="text" id="myRefCode" readonly style="background:#eee;" />
+      <p>রেফার লিংক:</p>
+      <input type="text" id="refLink" readonly style="background:#eee;" />
+      <button class="btn" onclick="copyRefCode()">কপি করুন</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="leaderboard">
+    <div class="card">
+      <h3>🏆 টপ ১০ আর্নার</h3>
+      <ol id="leaderboardList"></ol>
+    </div>
+  </div>
+
+  <div class="container hidden" id="withdrawHistory">
+    <div class="card">
+      <h3>📜 উইথড্র হিস্টরি</h3>
+      <ul id="withdrawList"></ul>
+    </div>
+  </div>
+
+  <nav class="hidden" id="navBar">
+    <button onclick="navigate('home')">🏠 হোম</button>
+    <button onclick="navigate('earn')">💼 কাজ</button>
+    <button onclick="navigate('withdraw')">💳 উইথড্র</button>
+    <button onclick="navigate('leaderboard')">🏆 লিডারবোর্ড</button>
+    <button onclick="navigate('withdrawHistory')">📜 হিস্টরি</button>
+    <button onclick="navigate('profile')">👤 প্রোফাইল</button>
+  </nav><script src='//libtl.com/sdk.js' data-zone='9370281' data-sdk='show_9370281'></script>
 <script>
-function handleStart() {
-  const saved = localStorage.getItem("activeUser");
-  if (saved) {
-    loadUser(saved);
-  } else {
-    document.getElementById("welcomeScreen").classList.add("hidden");
-    document.getElementById("loginScreen").classList.remove("hidden");
-  }
-}
+let userData = {};
+let adCooldown = false;
+let adClickCount = 0;
+let lastAdTime = 0;
 
-function clearSession() {
-  if (confirm("আপনি কি নিশ্চিতভাবে সব ইউজার ডেটা ক্লিয়ার করতে চান?")) {
-    localStorage.clear();
-    alert("✅ সব সেশন মুছে গেছে!");
-    location.reload();
-  }
+function goToLogin() {
+  document.getElementById("welcomeScreen").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
 }
 
 window.onload = () => {
   checkVPN();
-  const saved = localStorage.getItem("activeUser");
-  if (saved) {
-    // Show START → goes to home
-    document.getElementById("welcomeScreen").classList.remove("hidden");
+  const savedUser = localStorage.getItem("activeUser");
+  if (savedUser) {
+    loadUser(savedUser);
   } else {
     document.getElementById("welcomeScreen").classList.remove("hidden");
   }
 
   const tg = window.Telegram?.WebApp?.initDataUnsafe?.user;
   if (tg?.username === "Mdjobaeyt") {
-    document.getElementById("sessionClearBtn").classList.remove("hidden");
+    document.getElementById("sessionClearBtn").style.display = "inline-block";
   }
 };
 
-function checkVPN() {
-  fetch("https://ipapi.co/json/")
-    .then(res => res.json())
-    .then(data => {
-      const allowed = ["US", "GB", "CA", "DE", "AU"];
-      if (!allowed.includes(data.country)) {
-        document.body.innerHTML = "<h2 style='padding:20px;color:red;text-align:center;'>⚠️ VPN দিয়ে যুক্তরাষ্ট্র, ইউকে, কানাডা, জার্মানি বা অস্ট্রেলিয়া কান্ট্রি ছাড়া প্রবেশ নিষিদ্ধ!</h2>";
-      }
-    });
+function clearSession() {
+  if (confirm("আপনি কি নিশ্চিতভাবে সব ইউজার ডেটা ক্লিয়ার করতে চান?")) {
+    localStorage.clear();
+    alert("সকল সেশন ডেটা মুছে ফেলা হয়েছে!");
+    location.reload();
+  }
 }
-</script><!-- Continue inside <body> -->
-
-<div class="container hidden" id="home">
-  <div class="card">
-    <h3 id="userDisplay">Username</h3>
-    <p><strong>ব্যালেন্স:</strong> <span id="balance">0</span> কয়েন</p>
-  </div>
-  <div class="card">
-    <h4>আজকের কাজ</h4>
-    <p>মোট কাজ: ∞<br> শেষ হয়েছে: <span id="completed">0</span><br> বাকি: ∞</p>
-  </div>
-  <div class="card">
-    <h4>আজকের আয়</h4>
-    <p>আজকের আয়: BDT <span id="todayEarning">0.00</span><br> মোট আয়: BDT <span id="lifetimeEarning">0.00</span></p>
-  </div>
-</div>
-
-<div class="container hidden" id="earn">
-  <div class="card">
-    <h4>আজকের টাস্ক</h4>
-    <p>মোট: ∞ | শেষ: <span id="completedEarn">0</span> | বাকি: ∞</p>
-    <button class="btn" id="adBtn" onclick="showAd()">🎬 কাজ শুরু করুন</button>
-    <div id="cooldownMessage" class="hidden">
-      <p>১ ঘণ্টার জন্য কাজ বন্ধ আছে। অনুগ্রহ করে পরে চেষ্টা করুন।</p>
-    </div>
-    <div id="adContainer" style="margin-top:15px;"></div>
-  </div>
-</div>
-
-<script src='//libtl.com/sdk.js' data-zone='9370281' data-sdk='show_9370281'></script>
-<script>
-let userData = {};
-let adCooldown = false;
 
 function startApp() {
   const username = document.getElementById("usernameInput").value.trim();
@@ -140,10 +172,11 @@ function startApp() {
 
   localStorage.setItem("activeUser", username);
   localStorage.setItem(userKey, JSON.stringify(userData));
-  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("login").classList.add("hidden");
   document.getElementById("home").classList.remove("hidden");
   document.getElementById("navBar").classList.remove("hidden");
   updateUI();
+  setupReferral(userKey);
 }
 
 function loadUser(username) {
@@ -159,14 +192,17 @@ function loadUser(username) {
 
 function updateUI() {
   document.getElementById("userDisplay").innerText = userData.username;
+  document.getElementById("profileUsername").innerText = userData.username;
   document.getElementById("balance").innerText = userData.coins;
+  document.getElementById("balanceWithdraw").innerText = userData.coins;
+  document.getElementById("balanceProfile").innerText = userData.coins;
   document.getElementById("completed").innerText = userData.completed;
   document.getElementById("completedEarn").innerText = userData.completedEarn || 0;
   document.getElementById("todayEarning").innerText = (userData.coins * 0.01).toFixed(2);
   document.getElementById("lifetimeEarning").innerText = (userData.coins * 0.01).toFixed(2);
-}
-
-function showAd() {
+  document.getElementById("myRefCode").value = userData.myCode;
+  document.getElementById("refLink").value = location.origin + "?ref=" + userData.myCode;
+}function showAd() {
   const now = Date.now();
   if (userData.cooldownUntil && now < userData.cooldownUntil) {
     document.getElementById("cooldownMessage").classList.remove("hidden");
@@ -224,50 +260,23 @@ function finalizeAd() {
 function saveUserData() {
   localStorage.setItem("adsUser_" + userData.username, JSON.stringify(userData));
 }
-</script><!-- Withdraw Screen -->
-<div class="container hidden" id="withdraw">
-  <div class="card">
-    <h4>উপলব্ধ ব্যালেন্স: <span id="balanceWithdraw">0</span> কয়েন</h4>
-    <h4>উইথড্র রিকোয়েস্ট করুন</h4>
-    <select id="method">
-      <option value="">মেথড সিলেক্ট করুন</option>
-      <option value="recharge">মোবাইল রিচার্জ (৫০০০ কয়েন)</option>
-      <option value="bkash">bKash/Nagad (১০০০০ কয়েন)</option>
-    </select>
-    <input type="number" id="amount" placeholder="টাকার পরিমাণ লিখুন" />
-    <input type="text" id="wallet" placeholder="বিকাশ/নগদ নাম্বার" />
-    <button class="btn" onclick="submitWithdraw()">উইথড্র দিন</button>
-  </div>
-</div>
 
-<!-- Withdraw History -->
-<div class="container hidden" id="withdrawHistory">
-  <div class="card">
-    <h3>📜 উইথড্র হিস্টরি</h3>
-    <ul id="withdrawList"></ul>
-  </div>
-</div>
-
-<script>
 function submitWithdraw() {
   const method = document.getElementById("method").value;
   const amount = parseInt(document.getElementById("amount").value);
   const wallet = document.getElementById("wallet").value;
   if (!method || !amount || !wallet) return alert("সকল ঘর পূরণ করুন");
-
   const valid =
     (method === "recharge" && userData.coins >= 5000 && amount >= 25 && amount <= 50) ||
     (method === "bkash" && userData.coins >= 10000 && amount >= 50 && amount <= 100);
-
   if (!valid) return alert("অ্যামাউন্ট ভুল বা কয়েন কম রয়েছে");
-
   userData.coins -= (method === "recharge" ? 5000 : 10000);
   userData.withdrawn = true;
   addWithdrawHistory(amount, method, wallet);
   saveUserData();
   checkReferralCommission();
   updateUI();
-  alert("✅ উইথড্র রিকোয়েস্ট সম্পন্ন!");
+  alert("উইথড্র রিকোয়েস্ট সম্পন্ন!");
 }
 
 function addWithdrawHistory(amount, method, wallet) {
@@ -289,6 +298,32 @@ function showWithdrawHistory() {
   });
 }
 
+function copyRefCode() {
+  const copyText = document.getElementById("refLink");
+  copyText.select();
+  document.execCommand("copy");
+  alert("রেফার লিংক কপি হয়েছে!");
+}
+
+function setupReferral(userKey) {
+  const refInput = document.getElementById("refInput");
+  const usedRefKey = userKey + "_usedRef";
+  if (!localStorage.getItem(usedRefKey) && refInput) {
+    refInput.addEventListener("change", () => {
+      const entered = refInput.value.trim();
+      if (entered && entered !== userData.myCode) {
+        localStorage.setItem(usedRefKey, "true");
+        userData.referredBy = entered;
+        saveUserData();
+        updateUI();
+        alert("✅ রেফার গ্রহণ হয়েছে!");
+      } else {
+        alert("❌ নিজেকে রেফার করা যাবে না!");
+      }
+    });
+  }
+}
+
 function checkReferralCommission() {
   if (userData.referredBy && userData.completed >= 10 && userData.withdrawn && !userData.referralCommissionGiven) {
     const refKey = "adsUser_" + userData.referredBy;
@@ -303,196 +338,46 @@ function checkReferralCommission() {
     }
   }
 }
-</script><!-- Profile -->
-<div class="container hidden" id="profile">
-  <div class="card">
-    <h3>প্রোফাইল</h3>
-    <p>ইউজারনেম: <span id="profileUsername"></span></p>
-    <p>ব্যালেন্স: <span id="balanceProfile">0</span> কয়েন</p>
-    <p>আপনার রেফার কোড:</p>
-    <input type="text" id="myRefCode" readonly style="background:#eee;" />
-    <p>রেফার লিংক:</p>
-    <input type="text" id="refLink" readonly style="background:#eee;" />
-    <button class="btn" onclick="copyRefCode()">📋 কপি করুন</button>
-  </div>
 
-  <!-- Admin Panel (Mdjobaeyt only) -->
-  <div class="card hidden" id="adminPanel">
-    <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" class="avatar" />
-    <h3>👑 Mdjobaeyt Admin Panel</h3>
-    <label>🎯 CPM Rate:</label>
-    <input type="number" id="cpmInput" value="5">
-    <label>🎁 Coins per 5 Ads:</label>
-    <input type="number" id="rewardCoin" value="50">
-    <button class="btn" onclick="saveAdminSettings()">💾 Save Settings</button>
-    <hr/>
-    <h4>📤 Withdraw Requests:</h4>
-    <div id="withdrawRequests"></div>
-    <hr/>
-    <h4>🧑‍💼 All Users:</h4>
-    <div id="userListAdmin"></div>
-    <hr/>
-    <h4>🛠️ Add/Subtract Coins:</h4>
-    <input type="text" id="targetUser" placeholder="Username">
-    <input type="number" id="targetCoin" placeholder="+/- Amount">
-    <button class="btn" onclick="changeUserCoins()">✅ Apply</button>
-  </div>
-</div>
-
-<!-- Leaderboard -->
-<div class="container hidden" id="leaderboard">
-  <div class="card">
-    <h3>🏆 Top Earners</h3>
-    <ol id="leaderboardList"></ol>
-  </div>
-  <div class="card">
-    <h3>👥 Top Referrers</h3>
-    <ol id="refBoardList"></ol>
-  </div>
-</div>
-
-<!-- Navbar -->
-<nav class="hidden" id="navBar">
-  <button onclick="navigate('home')">🏠 হোম</button>
-  <button onclick="navigate('earn')">💼 কাজ</button>
-  <button onclick="navigate('withdraw')">💳 উইথড্র</button>
-  <button onclick="navigate('leaderboard')">🏆 লিডারবোর্ড</button>
-  <button onclick="navigate('withdrawHistory')">📜 হিস্টরি</button>
-  <button onclick="navigate('profile')">👤 প্রোফাইল</button>
-</nav><script>
-function copyRefCode() {
-  const copyText = document.getElementById("refLink");
-  copyText.select();
-  document.execCommand("copy");
-  alert("রেফার লিংক কপি হয়েছে!");
-}
-
-function showLeaderboard() {
-  const allUsers = [];
-  const refUsers = [];
-
-  for (let key in localStorage) {
-    if (key.startsWith("adsUser_")) {
-      const data = JSON.parse(localStorage.getItem(key));
-      if (data && data.coins) {
-        allUsers.push({ username: data.username, coins: data.coins });
-        refUsers.push({ username: data.username, referrals: data.referrals?.length || 0 });
-      }
-    }
-  }
-
-  allUsers.sort((a, b) => b.coins - a.coins);
-  refUsers.sort((a, b) => b.referrals - a.referrals);
-
-  const topEarn = allUsers.slice(0, 10);
-  const topRef = refUsers.slice(0, 10);
-
-  const list1 = document.getElementById("leaderboardList");
-  const list2 = document.getElementById("refBoardList");
-
-  list1.innerHTML = topEarn.map((u, i) => `<li>${i+1}. ${u.username} — ${u.coins} কয়েন</li>`).join('');
-  list2.innerHTML = topRef.map((u, i) => `<li>${i+1}. ${u.username} — ${u.referrals} জন রেফার</li>`).join('');
-}
-
-function saveAdminSettings() {
-  userData.cpm = parseFloat(document.getElementById("cpmInput").value);
-  userData.rewardCoin = parseInt(document.getElementById("rewardCoin").value);
-  localStorage.setItem("adsUser_" + userData.username, JSON.stringify(userData));
-  alert("✅ Settings Updated");
-}
-
-function loadAdminPanel() {
-  if (userData.username === "Mdjobaeyt") {
-    document.getElementById("adminPanel").classList.remove("hidden");
-    loadWithdraws();
-    loadAllUsers();
-  }
-}
-
-function loadWithdraws() {
-  const requests = [];
-  for (let key in localStorage) {
-    if (key.startsWith("withdrawHistory_")) {
-      const history = JSON.parse(localStorage.getItem(key));
-      const user = key.replace("withdrawHistory_", "");
-      history.forEach(item => {
-        requests.push(`<div>${user}: ${item.amount} (${item.method}) → ${item.wallet}</div>`);
-      });
-    }
-  }
-  document.getElementById("withdrawRequests").innerHTML = requests.join('') || "❌ কিছুই নেই";
-}
-
-function loadAllUsers() {
-  const list = [];
-  for (let key in localStorage) {
-    if (key.startsWith("adsUser_")) {
-      const u = JSON.parse(localStorage.getItem(key));
-      list.push(`<div>${u.username}: ${u.coins} কয়েন, ${u.completed} ad, ${u.referrals?.length || 0} রেফার</div>`);
-    }
-  }
-  document.getElementById("userListAdmin").innerHTML = list.join('');
-}
-
-function changeUserCoins() {
-  const user = document.getElementById("targetUser").value.trim();
-  const amount = parseInt(document.getElementById("targetCoin").value);
-  const key = "adsUser_" + user;
-  const saved = localStorage.getItem(key);
-  if (!saved) return alert("❌ ইউজার পাওয়া যায়নি");
-
-  const data = JSON.parse(saved);
-  data.coins += amount;
-  localStorage.setItem(key, JSON.stringify(data));
-  alert(`✅ ${user}-এর ব্যালেন্স পরিবর্তন হয়েছে`);
-  loadAllUsers();
-}
-</script><script>
-// Navigate to page
 function navigate(page) {
   document.querySelectorAll(".container").forEach(div => div.classList.add("hidden"));
   document.getElementById(page).classList.remove("hidden");
   updateUI();
   if (page === 'leaderboard') showLeaderboard();
   if (page === 'withdrawHistory') showWithdrawHistory();
-  if (page === 'profile') loadAdminPanel();
 }
 
-// Referral system
-function setupReferral(userKey) {
-  const urlParams = new URLSearchParams(window.location.search);
-  const ref = urlParams.get("ref");
-  if (ref && ref !== userData.myCode && !userData.referredBy) {
-    userData.referredBy = ref;
-    userData.referrals = userData.referrals || [];
-    userData.referrals.push(ref);
-    saveUserData();
+function showLeaderboard() {
+  const allUsers = [];
+  for (let key in localStorage) {
+    if (key.startsWith("adsUser_")) {
+      const data = JSON.parse(localStorage.getItem(key));
+      if (data && data.coins) {
+        allUsers.push({ username: data.username, coins: data.coins });
+      }
+    }
   }
+  allUsers.sort((a, b) => b.coins - a.coins);
+  const top10 = allUsers.slice(0, 10);
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "";
+  top10.forEach((user, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${i + 1}. ${user.username} — ${user.coins} কয়েন`;
+    list.appendChild(li);
+  });
 }
 
-// Copy Guide Button
-function copyGuide() {
-  const guide = `🧠 High CPM Guide:\n\n✅ VPN দিয়ে USA কানেক্ট করুন\n✅ প্রতি ৫০ এড পরে IP পরিবর্তন\n✅ CPM = (Earn ÷ Impression) × 1000\n✅ GEO-based traffic দিন\n✅ CPM 2–10$ রাখতে চেষ্টা করুন`;
-  navigator.clipboard.writeText(guide);
-  alert("✅ কপি হয়েছে!");
+function checkVPN() {
+  fetch("https://ipapi.co/json/")
+    .then(res => res.json())
+    .then(data => {
+      const allowed = ["US", "GB", "CA", "DE", "AU"];
+      if (!allowed.includes(data.country)) {
+        document.body.innerHTML = "<h2 style='padding:20px;color:red;text-align:center;'>⚠️ শুধুমাত্র US, UK, CA, DE, AU দেশ থেকে অ্যাক্সেস করা যাবে। VPN চালু করুন।</h2>";
+      }
+    });
 }
-
-// Optional: Admin editable Ad Code
-function saveAdCode() {
-  const code = document.getElementById("adCodeInput").value;
-  localStorage.setItem("adminAdCode", code);
-  alert("✅ Ad Code Saved");
-}
-
-function loadAdCode() {
-  const savedAd = localStorage.getItem("adminAdCode");
-  if (savedAd && document.getElementById("adContainer")) {
-    document.getElementById("adContainer").innerHTML = savedAd;
-  }
-}
-
-// Load ad code on page load if exists
-window.addEventListener("DOMContentLoaded", loadAdCode);
 </script>
 </body>
-            </html>
+</html>
