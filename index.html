@@ -383,5 +383,28 @@ window.onload = () => {
 };
 </script>
 
+
+<!-- Firebase SDK -->
+<script type="module">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDoqnQkReLfCqDaAMKnbT-9YTQB2BPwmOI",
+  authDomain: "adbikash-c105d.firebaseapp.com",
+  projectId: "adbikash-c105d",
+  storageBucket: "adbikash-c105d.firebasestorage.app",
+  messagingSenderId: "101776154768",
+  appId: "1:101776154768:web:e26a19a79f6b6277d4f815",
+  measurementId: "G-Y1MPS2JRT2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+</script>
+
 </body>  
 </html>
