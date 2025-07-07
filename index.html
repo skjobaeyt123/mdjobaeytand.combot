@@ -1,5 +1,4 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
+<<head>  
   <meta charset="UTF-8" />  
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
   <title>AdBikash</title>  
@@ -278,7 +277,13 @@ function showLeaderboard() {
   allUsers.sort((a, b) => b.coins - a.coins);  
   const top10 = allUsers.slice(0, 10);  
   const list = document.getElementById("leaderboardList");  
-  list.innerHTML = "";  
+  
+list.innerHTML = "";
+users.forEach((user, i) => {
+  const li = document.createElement("li");
+  li.textContent = `${i + 1}. ${user.username} — ${user.coins} Coins — ${user.refCount || 0} Referrals`;
+  list.appendChild(li);
+});  
   top10.forEach((user, i) => {  
     const li = document.createElement("li");  
     li.textContent = `${i + 1}. ${user.username} — ${user.coins} Coins`;  
@@ -297,7 +302,13 @@ function showWithdrawHistory() {
   const key = "withdrawHistory_" + userData.username;  
   const history = JSON.parse(localStorage.getItem(key) || "[]");  
   const list = document.getElementById("withdrawList");  
-  list.innerHTML = "";  
+  
+list.innerHTML = "";
+users.forEach((user, i) => {
+  const li = document.createElement("li");
+  li.textContent = `${i + 1}. ${user.username} — ${user.coins} Coins — ${user.refCount || 0} Referrals`;
+  list.appendChild(li);
+});  
   history.forEach(item => {  
     const li = document.createElement("li");  
     li.textContent = `${item.date} — ${item.method} — ${item.amount} BDT to ${item.wallet}`;  
@@ -384,26 +395,90 @@ window.onload = () => {
 </script>
 
 
-<!-- Firebase SDK -->
+<!-- ✅ Firebase Realtime Integration Script -->
 <script type="module">
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+import { getDatabase, ref, get, set, update, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDoqnQkReLfCqDaAMKnbT-9YTQB2BPwmOI",
   authDomain: "adbikash-c105d.firebaseapp.com",
+  databaseURL: "https://adbikash-c105d-default-rtdb.firebaseio.com",
   projectId: "adbikash-c105d",
-  storageBucket: "adbikash-c105d.firebasestorage.app",
+  storageBucket: "adbikash-c105d.appspot.com",
   messagingSenderId: "101776154768",
   appId: "1:101776154768:web:e26a19a79f6b6277d4f815",
   measurementId: "G-Y1MPS2JRT2"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+// Firebase functions
+window.realtimeSaveUser = async function(username, data) {
+  await set(ref(db, 'users/' + username), data);
+};
+
+window.realtimeUpdateBalance = async function(username, coins) {
+  const userRef = ref(db, 'users/' + username);
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    const user = snapshot.val();
+    const newBalance = (user.coins || 0) + coins;
+    await update(userRef, { coins: newBalance });
+  }
+};
+
+window.realtimeLogWithdraw = async function(data) {
+  await push(ref(db, 'withdraws'), data);
+};
+
+window.realtimeLoadLeaderboard = function(callback) {
+  onValue(ref(db, 'users'), snap => {
+    const all = [];
+    snap.forEach(child => {
+      const val = child.val();
+      all.push({ username: child.key, coins: val.coins || 0 });
+    });
+    all.sort((a, b) => b.coins - a.coins);
+    callback(all.slice(0, 100));
+  });
+};
+
+window.realtimeLoadWithdraws = function(callback) {
+  onValue(ref(db, 'withdraws'), snap => {
+    const all = [];
+    snap.forEach(child => {
+      all.push(child.val());
+    });
+    callback(all.reverse());
+  });
+};
+</script>
+
+
+<!-- ✅ Firebase Referral Count Tracking -->
+<script type="module">
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// ✅ Update referrer's referral count in Firebase
+window.realtimeUpdateReferral = async function(refCode) {
+  const db = getDatabase();
+  const usersRef = ref(db, 'users');
+  const snapshot = await get(usersRef);
+  if (snapshot.exists()) {
+    snapshot.forEach(child => {
+      const data = child.val();
+      if (data.myCode === refCode) {
+        const refUsername = child.key;
+        const refUserRef = ref(db, 'users/' + refUsername);
+        update(refUserRef, {
+          refCount: (data.refCount || 0) + 1
+        });
+      }
+    });
+  }
+};
 </script>
 
 </body>  
